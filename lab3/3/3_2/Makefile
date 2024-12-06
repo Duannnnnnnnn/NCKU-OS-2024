@@ -4,7 +4,7 @@ obj-m := $(TARGET_MODULE).o
 
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
-CC := gcc
+CC := /usr/bin/x86_64-linux-gnu-gcc-12
 
 all:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules

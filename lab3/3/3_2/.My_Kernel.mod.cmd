@@ -1,0 +1,1 @@
+savedcmd_/home/user/Desktop/NCKU-OS-2024/lab3/3/3_2/My_Kernel.mod := printf '%s\n'   My_Kernel.o | awk '!x[$$0]++ { print("/home/user/Desktop/NCKU-OS-2024/lab3/3/3_2/"$$0) }' > /home/user/Desktop/NCKU-OS-2024/lab3/3/3_2/My_Kernel.mod

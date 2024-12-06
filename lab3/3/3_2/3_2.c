@@ -78,7 +78,7 @@ void *thread1(void *arg){
         printf("Error opening file\n");
         exit(1);
     }
-    fprintf(fp, "Hello World from 1\n");
+    fprintf(fp, "Thread 1 says hello!");
     fclose(fp);
     /****************/ 
 
@@ -108,7 +108,7 @@ void *thread2(void *arg){
         printf("Error opening file\n");
         exit(1);
     }
-    fprintf(fp, "Hello World from 2\n");
+    fprintf(fp, "Thread 2 says hello!");
     fclose(fp);
     /****************/   
 
