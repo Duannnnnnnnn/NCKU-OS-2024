@@ -12,6 +12,23 @@ char buf[BUFSIZE]; //kernel buffer
 static ssize_t Mywrite(struct file *fileptr, const char __user *ubuf, size_t buffer_len, loff_t *offset){
     /*Your code here*/
 
+    ssize_t len;
+    
+    if(*offset > 0){
+        return 0;
+    }
+
+    copy_from_user(buf, ubuf, buf_len);
+    
+    len = sprintf(buf+buf_len, "PID: %d, TID: %d, time: %lld\n", 
+                        current->tgid, current->pid, 
+                        current->utime/100/1000);
+    // printk("My_Kernel: Data from the user: %s\n", buf);
+    *offset += buf_len;
+    *offset += len;
+    buf_len += len;
+    return len;
+
     /****************/
 }
 
@@ -19,6 +36,23 @@ static ssize_t Mywrite(struct file *fileptr, const char __user *ubuf, size_t buf
 static ssize_t Myread(struct file *fileptr, char __user *ubuf, size_t buffer_len, loff_t *offset){
     /*Your code here*/
     
+    if(*offset > 0 ){
+        // only one read
+        return 0;
+    }
+
+    ssize_t len = procfs_buffer_size;
+    if (len > buffer_len){
+        len = buffer_len;
+    }
+
+    if (copy_to_user(ubuf, buf, len)){
+        return -EFAULT;
+    }
+
+    *offset += len;
+    return len;
+
     /****************/
 }
 

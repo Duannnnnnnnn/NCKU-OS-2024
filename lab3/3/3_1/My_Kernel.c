@@ -17,36 +17,19 @@ static ssize_t Mywrite(struct file *fileptr, const char __user *ubuf, size_t buf
 
 static ssize_t Myread(struct file *fileptr, char __user *ubuf, size_t buffer_len, loff_t *offset){
     /*Your code here*/
+    struct task_struct  *thread;
     if(*offset > 0){
-        // only allow read once
         return 0;
     }
-
-    // struct task_struct *p = current;
-    struct task_struct *thread;
-    // struct list_head *list;
     int len = 0;
-    char *bufptr = buf;
-
     for_each_thread(current, thread){
-        if( current->pid == thread->pid){
-            continue;
-        }
-        len += sprintf(bufptr, "PID: %d, TID: %d, Priority: %d, State: %ld\n", 
-            current->pid, thread->pid, thread->prio, thread->__state);
-        bufptr += len;
-        *offset += len;
+        if(thread->tgid == thread->pid ) continue;
+        len += sprintf(buf+len, "PID: %d, TID: %d, Priority: %d, State: %d \n", 
+                        thread->tgid, thread->pid, 
+                        thread->prio, thread->__state);
     }
-
-    // Ensure the user buffer can hold the data
-    if (buffer_len < len) {
-        return -EINVAL; // Invalid argument error
-    }
-
-    // Copy data to user space and handle potential errors
-    if (copy_to_user(ubuf, buf, len)) {
-        return -EFAULT; // Bad address error
-    }
+    copy_to_user(ubuf, buf, len);
+    *offset = *offset+ len;
     return len;
     /****************/
 }
